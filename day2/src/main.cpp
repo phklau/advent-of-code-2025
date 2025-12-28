@@ -24,7 +24,31 @@ uint64_t findDoublePatterns(uint64_t &i)
 
 uint64_t findAllPatterns(uint64_t &i)
 {
-    return 0;
+    uint64_t sum = 0;
+    uint64_t lastNum = 0;
+    std::string number = std::to_string(i);
+    for(int l=1;l<number.length();l++)
+    {
+        bool digDivid = !bool(number.length() % l);
+        if (digDivid)
+        {
+            std::vector<uint64_t> subNumbers;
+            for(int d=0; d<number.length(); d=d+l)
+            {
+                uint32_t subNum = std::stoull(number.substr(d, l));
+                subNumbers.push_back(subNum);
+            }
+            bool allSubNumbersEqual = std::equal(subNumbers.begin()+1,subNumbers.end(), subNumbers.begin());
+            uint64_t num_uint = std::stoull(number);
+            if (allSubNumbersEqual && lastNum != num_uint)
+            {
+                // std::cout << "wrong ID:" << number << std::endl;
+                lastNum = num_uint;
+                sum += num_uint;
+            }
+        }
+    }
+    return sum;
 }
 
 
@@ -68,16 +92,19 @@ int main(int argc, char** argv)
         ranges.push_back(parsedRange);
     }
 
-    uint64_t passwort = 0;
+    uint64_t passwort1 = 0;
+    uint64_t passwort2 = 0;
     for(auto range=ranges.begin(); range!=ranges.end(); ++range)
     {
         std::cout << range->begin << "-" << range->end << std::endl;
         for (uint64_t i=range->begin; i<=range->end; i++)
         {
-                passwort += findDoublePatterns(i);
+                passwort1 += findDoublePatterns(i);
+                passwort2 += findAllPatterns(i);
         }
     }
-    std::cout << "Part1: " << passwort << std::endl;
+    std::cout << "Part1: " << passwort1 << std::endl;
+    std::cout << "Part2: " << passwort2 << std::endl;
 
     return 0;
 }
