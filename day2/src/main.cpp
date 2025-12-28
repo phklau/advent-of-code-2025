@@ -5,6 +5,28 @@
 #include <string>
 #include <cstdint>
 
+uint64_t findDoublePatterns(uint64_t &i)
+{
+    std::string number = std::to_string(i);
+    bool digitsOdd = !bool(number.length() % 2);
+    if (digitsOdd)
+    {
+        uint64_t firstHalf = std::stoull(number.substr(0, number.length()/2));
+        uint64_t secondHalf = std::stoull(number.substr(number.length()/2, number.length()/2));
+        if (firstHalf == secondHalf)
+        {
+            std::cout << number << std::endl;
+            return std::stoull(number);
+        }
+    }
+    return 0;
+};
+
+uint64_t findAllPatterns(uint64_t &i)
+{
+    return 0;
+}
+
 
 struct IDrange
 {
@@ -52,18 +74,7 @@ int main(int argc, char** argv)
         std::cout << range->begin << "-" << range->end << std::endl;
         for (uint64_t i=range->begin; i<=range->end; i++)
         {
-            std::string number = std::to_string(i);
-            bool digitsOdd = !bool(number.length() % 2);
-            if (digitsOdd)
-            {
-                uint64_t firstHalf = std::stoull(number.substr(0, number.length()/2));
-                uint64_t secondHalf = std::stoull(number.substr(number.length()/2, number.length()/2));
-                if (firstHalf == secondHalf)
-                {
-                    std::cout << number << std::endl;
-                    passwort += std::stoull(number);
-                }
-            }
+                passwort += findDoublePatterns(i);
         }
     }
     std::cout << "Part1: " << passwort << std::endl;
