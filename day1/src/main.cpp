@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <cstdlib>
 
 const std::string filepath = "../input.txt";
 // const std::string filepath = "../test.txt";
@@ -25,22 +26,21 @@ int main()
 
     if (file.is_open()) {
     // read in file input, struct?
-            while (getline(file, line)) {
-                dialMovement movement;
-                if (char(line[0]) == 'R')
-                {
-                    movement.direction = 1;
-                }
-                if (char(line[0]) == 'L')
-                {
-                    movement.direction = -1;
-                }
-
-                line.erase(0,1);
-                movement.turn = std::stoi(line);
-                // std::cout << movement.turn << std::endl;
-                movements.push_back(movement);
+        while (getline(file, line)) {
+            dialMovement movement;
+            if (char(line[0]) == 'R')
+            {
+                movement.direction = 1;
             }
+            if (char(line[0]) == 'L')
+            {
+                movement.direction = -1;
+            }
+
+            line.erase(0,1);
+            movement.turn = std::stoi(line);
+            movements.push_back(movement);
+        }
         file.close();
     }
     else
@@ -60,8 +60,23 @@ int main()
         {
             zeroPositions++;
         }
-        // std::cout << (*movement).direction * (*movement).turn << " pos: " << pos << std::endl;
     }
     std::cout << "Part1: " <<zeroPositions<< std::endl;
+
+
+    pos = startPos;
+    zeroPositions = 0;
+    int abspos = 0;
+    for (auto movement=movements.begin(); movement!=movements.end(); ++movement)
+    {
+        abspos = pos + ((*movement).direction * (*movement).turn);
+        zeroPositions += std::abs(abspos/100);
+        if(abspos<=0 && pos!=0)
+        {
+            zeroPositions++;
+        }
+        pos = mod(abspos, 100);
+    }
+    std::cout << "Part2: " <<zeroPositions<< std::endl;
     return 0;
 }
