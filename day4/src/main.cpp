@@ -44,9 +44,6 @@ int main(int argc, char** argv)
                     return 1;
             }
         }
-      //  for (auto const& c : row)
-      //  std::cout << c << ' ';
-      //  std::cout << std::endl;
         row = row.t();
     //    std::cout << cv::format(row, cv::Formatter::FMT_C     ) << std::endl;
         grid.push_back(row);
@@ -65,5 +62,26 @@ int main(int argc, char** argv)
 
     int pullableRolls = std::count_if(filteredGrid.begin<uint8_t>(), filteredGrid.end<uint8_t>(), [](uint8_t i) { return i >= 10 && i<14; });
     std::cout << "Part 1: " << pullableRolls << std::endl;
+
+    int sum = 0;
+    pullableRolls = 1;
+    while(pullableRolls!=0)
+    {
+        pullableRolls = 0;
+        cv::filter2D(grid, filteredGrid, -1, kernel, cv::Point( -1, -1 ), 0, cv::BORDER_CONSTANT);
+        for(auto posGrid=grid.begin<uint8_t>(), posFilt=filteredGrid.begin<uint8_t>(); posGrid!=grid.end<uint8_t>() || posFilt!=filteredGrid.end<uint8_t>(); posGrid++, posFilt++)
+        {
+            if(*posFilt >= 10 && *posFilt < 14)
+            {
+                pullableRolls++;
+                *posGrid = 0;
+            }
+        }
+        sum += pullableRolls;
+        // std::cout << pullableRolls << std::endl;
+    }
+
+    std::cout << "Part 2: " << sum << std::endl;
+
     return 0;
 }
